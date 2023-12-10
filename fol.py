@@ -33,18 +33,17 @@ class FolKB(KB):
     def fetch_rules_for_goal(self, goal):
         return self.clauses
 
-
+#quert input to knowledge base
 def get_characteristics(animal_name, kb):
     query = f'Characteristics({animal_name.lower()}, x)'
     result = kb.ask_generator(query)
     return result
 
-
+#User input for characteristics of animal
 def update_kb_with_new_animal(animal_name, kb):
     characteristics = []
     print(f"Let's add {animal_name} to our knowledge base.")
 
-    # General characteristics
     has_fur = input("Does it have fur? (yes/no): ").lower() == 'yes'
     gives_milk = input("Does it give milk? (yes/no): ").lower() == 'yes'
     warm_blooded = input("Is it warm-blooded? (yes/no): ").lower() == 'yes'
@@ -54,8 +53,11 @@ def update_kb_with_new_animal(animal_name, kb):
     has_scales = input("Does it have scales? (yes/no): ").lower() == 'yes'
     has_exoskeleton = input("Does it have an exoskeleton? (yes/no): ").lower() == 'yes'
     has_slimy_skin = input("Does it have slimy skin? (yes/no): ").lower() == 'yes'
+    live_land = input("Does it live in land? (yes/no): ").lower() == 'yes'
+    live_water = input("Does it live in water? (yes/no): ").lower() == 'yes'
+    live_hybrid = input("Does it live in 2 places? (yes/no): ").lower() == 'yes'
 
-    # Update the knowledge base based on user input
+
     if has_fur:
         kb.tell(expr(f'HasFur({animal_name.lower()})'))
         characteristics.append('HasFur')
@@ -83,47 +85,69 @@ def update_kb_with_new_animal(animal_name, kb):
     if has_slimy_skin:
         kb.tell(expr(f'SlimySkin({animal_name.lower()})'))
         characteristics.append('SlimySkin')
+    if live_land:
+        kb.tell(expr(f'LiveLand({animal_name.lower()})'))
+        characteristics.append('LiveLand')
+    if live_water:
+        kb.tell(expr(f'LiveWater({animal_name.lower()})'))
+        characteristics.append('LiveWater')
+    if live_hybrid:
+        kb.tell(expr(f'LiveHybrid({animal_name.lower()})'))
+        characteristics.append('LiveHybrid')
     kb.tell(expr(f'Animal({animal_name.lower()})'))
     return characteristics
 
 
 def determine_class(animal_name, kb):
-    # Use a tuple instead of a list for constants
-    classes = ("Mammal", "Bird", "Reptile", "Fish", "Insect")
+    classes = ("Mammal", "Bird", "Reptile", "Fish", "Insect", "Amphibians")
     for c in classes:
-        # Use string formatting instead of f-strings for compatibility
         query = f'{c}({animal_name.lower()})'
-        # print(query)
         if kb.ask_generator(query):
             return c
-    # Use None instead of "Unknown" for no match
     return None
 
 
-# Knowledge Base
 animal_kb = FolKB(
     map(expr, [
-        '(HasFur(m) & GivesMilk(m) & WarmBlooded(m)) ==> Mammal(m)',
-        '(HasWings(b) & LaysEggs(b) & WarmBlooded(b)) ==> Bird(b)',
-        '(HasScales(r) & LaysEggs(r) & ColdBlooded(r)) ==> Reptile(r)',
-        '(SlimySkin(a) & LayEggs(a) & WarmBlooded(a)) ==> Amphibians(a)',
-        '(HasScales(f) & LaysEggs(f) & WarmBlooded(f)) ==> Fish(f)',
-        '(HasExoskeleton(i) & LaysEggs(i) & ColdBlooded(i)) ==> Insect(i)',
-    ])
+       '(HasFur(m) & GivesMilk(m) & WarmBlooded(m) & LiveLand(m)) ==> Mammal(m)',
+        '(HasWings(b) & LaysEggs(b) & WarmBlooded(b) & LiveLand(b)) ==> Bird(b)',
+        '(HasScales(r) & LaysEggs(r) & ColdBlooded(r) & LiveLand(r)) ==> Reptile(r)',
+        '(SlimySkin(a) & LaysEggs(a) & ColdBlooded(a) & LiveHybrid(a)) ==> Amphibians(a)',
+        '(HasScales(f) & LaysEggs(f) & ColdBlooded(f) & LiveWater(f)) ==> Fish(f)',
+        '(HasExoskeleton(i) & LaysEggs(i) & ColdBlooded(i) & LiveLand(i)) ==> Insect(i)',
+        ])
 )
 
-
-# Define characteristics for each animal
+#Animal Dictionary
 characteristics_dict = {
-    'dog': ['HasFur', 'GivesMilk', 'WarmBlooded'],
-    'dat': ['HasFur', 'GivesMilk', 'WarmBlooded'],
-    'bat': ['HasFur', 'HasWings', 'WarmBlooded'],
-    'eagle': ['HasWings', 'LaysEggs', 'WarmBlooded'],
-    'catfish': ['HasScales', 'LaysEggs', 'ColdBlooded'],
-    'spider': ['HasExoskeleton', 'LaysEggs', 'ColdBlooded'],
+    'cow': ['HasFur', 'GivesMilk', 'WarmBlooded', 'Herbivore'],
+    'dog': ['HasFur', 'GivesMilk', 'WarmBlooded', 'Carnivore'],
+    'cat': ['HasFur', 'GivesMilk', 'WarmBlooded', 'Carnivore'],
+    'monkey': ['HasFur', 'WarmBlooded', 'Omnivore', ],
+    'zebra': ['HasStripes', 'WarmBlooded', 'Herbivore'],
+    'giraffe': ['HasSpots', 'WarmBlooded', 'Herbivore'],
+    'panda': ['HasBlackAndWhiteFur', 'WarmBlooded', 'Herbivore'],
+    'penguin': ['HasFeathers', 'WarmBlooded', 'Carnivore'],
+    'kangaroo': ['HasFur', 'WarmBlooded', 'Herbivore'],
+    'octopus': ['HasEightArms', 'ColdBlooded', 'Carnivore'],
+    'lion': ['HasFur', 'WarmBlooded', 'Carnivore'],
+    'dolphin': ['HasSkin', 'WarmBlooded', 'Carnivore', 'Fins', 'Echolocation'],
+    'owl': ['HasFeathers', 'LaysEggs', 'Nocturnal', 'Carnivore'],
+    'snake': ['HasScales', 'ColdBlooded', 'Carnivore','Venomous'],
+    'fish': ['HasScales', 'LaysEggs', 'ColdBlooded', 'Omnivore/Carnivore', 'Fins'],
+    'butterfly': ['HasWings', 'ColdBlooded', 'Herbivore'],
+    'wolf': ['HasFur', 'WarmBlooded', 'Carnivore'],
+    'bear': ['HasFur', 'WarmBlooded', 'Omnivore', 'Hibernation'],
+    'horse': ['HasFur', 'WarmBlooded', 'Herbivore'],
+    'elephant': ['HasSkin', 'WarmBlooded', 'Herbivore'],
+    'tiger': ['HasStripes', 'WarmBlooded', 'Carnivore'],
+    'frog': ['HasSmoothSkin', 'ColdBlooded', 'Insectivore', 'Amphibious'],
+    'turtle': ['HasShell', 'ColdBlooded', 'Herbivore/Omnivore'],
 }
+
 choose = 0
 
+#Driver Code
 while choose != '4':
     clear_terminal()
     print("\nWelcome to the animal classification app!!\n")
@@ -131,6 +155,7 @@ while choose != '4':
     print("1.) Animalia Class")
     print("2.) Identify Animal")
     print("3.) Animal Dictionary")
+    print("4.) Exit")
     choose = input("Your choice (1/2/3): ")
     if choose == '1':
         print("- Amphibians are vertebrates known for their dual life stages, starting in water as larvae with gills and transitioning to land as adults with lungs, moist skin, and typically undergoing metamorphosis.")
@@ -141,13 +166,8 @@ while choose != '4':
         print('- Reptiles are cold-blooded animals with scales or scutes, and they typically lay eggs for reproduction.')
         input("\nPress Enter to continue...")
     if choose == '2':
-        # User input for animal name
         animal_name = input("Enter the name of the animal: ")
-
-        # Get the characteristics
         characteristics = get_characteristics(animal_name.capitalize(), animal_kb)
-
-        # Display the result or update the knowledge base
         if characteristics:
             print(f"{animal_name} has the following characteristics:")
             for char in characteristics:
@@ -161,12 +181,11 @@ while choose != '4':
                     print(f"- {char}")
             else:
                 print(f"Unable to add '{animal_name}' to the knowledge base.")
-
-        # Determine and print the class of the animal
         animal_class = determine_class(animal_name, animal_kb)
         print(f"The class of {animal_name} is: {animal_class}")
-        # input("\nPress Enter to continue...")
-        break
+        input("\nPress Enter to continue...")
+        clear_terminal()
+        exec(open('fol.py').read())
 
     if choose == "3":
         dictInput = input("What kind of species do you want to know? ").lower()
