@@ -9,10 +9,12 @@ Proyek ini membahas penerapan prinsip First Order Logic untuk memodelkan hubunga
 ## Cara Penggunaan
 1. Download dan Install Python versi 3+
 2. clone repo aima-python ke direktori local
-	$ git clone github.com/aimacode/aima-python
-	$ cd aima-python
-3. clone repo ini dan masukan file fol.py ke direktori aima-python
-4. Jalankan program fol.py pada terminal
+   
+   `$ git clone github.com/aimacode/aima-python`
+   
+   `$ cd aima-python`
+4. clone repo ini dan masukan file fol.py ke direktori aima-python
+5. Jalankan program fol.py pada terminal
 
 ## Our Team
 
