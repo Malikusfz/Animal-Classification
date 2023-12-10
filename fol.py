@@ -33,7 +33,7 @@ class FolKB(KB):
     def fetch_rules_for_goal(self, goal):
         return self.clauses
 
-#quert input to knowledge base
+#query input to knowledge base
 def get_characteristics(animal_name, kb):
     query = f'Characteristics({animal_name.lower()}, x)'
     result = kb.ask_generator(query)
@@ -55,7 +55,7 @@ def update_kb_with_new_animal(animal_name, kb):
     has_slimy_skin = input("Does it have slimy skin? (yes/no): ").lower() == 'yes'
     live_land = input("Does it live in land? (yes/no): ").lower() == 'yes'
     live_water = input("Does it live in water? (yes/no): ").lower() == 'yes'
-    live_hybrid = input("Does it live in 2 places? (yes/no): ").lower() == 'yes'
+    #live_hybrid = input("Does it live in 2 places? (yes/no): ").lower() == 'yes'
 
 
     if has_fur:
@@ -91,9 +91,9 @@ def update_kb_with_new_animal(animal_name, kb):
     if live_water:
         kb.tell(expr(f'LiveWater({animal_name.lower()})'))
         characteristics.append('LiveWater')
-    if live_hybrid:
-        kb.tell(expr(f'LiveHybrid({animal_name.lower()})'))
-        characteristics.append('LiveHybrid')
+    #if live_hybrid:
+    #    kb.tell(expr(f'LiveHybrid({animal_name.lower()})'))
+    #    characteristics.append('LiveHybrid')
     kb.tell(expr(f'Animal({animal_name.lower()})'))
     return characteristics
 
@@ -106,43 +106,53 @@ def determine_class(animal_name, kb):
             return c
     return None
 
+def display_animal_table(animal_dict):
+    animals = list(animal_dict.keys())
+    num_rows = (len(animals) + 4) // 5  # Calculate the number of rows needed for 5x5 display
+
+    print("\nTable of Animals:")
+    for i in range(num_rows):
+        row_start = i * 5
+        row_end = min(row_start + 5, len(animals))
+        row_animals = animals[row_start:row_end]
+        print("".join("{:<20}".format(animal) for animal in row_animals))
 
 animal_kb = FolKB(
     map(expr, [
        '(HasFur(m) & GivesMilk(m) & WarmBlooded(m) & LiveLand(m)) ==> Mammal(m)',
         '(HasWings(b) & LaysEggs(b) & WarmBlooded(b) & LiveLand(b)) ==> Bird(b)',
         '(HasScales(r) & LaysEggs(r) & ColdBlooded(r) & LiveLand(r)) ==> Reptile(r)',
-        '(SlimySkin(a) & LaysEggs(a) & ColdBlooded(a) & LiveHybrid(a)) ==> Amphibians(a)',
+        '(SlimySkin(a) & LaysEggs(a) & ColdBlooded(a) & LiveLand(a) & LiveWater(a)) ==> Amphibians(a)',
         '(HasScales(f) & LaysEggs(f) & ColdBlooded(f) & LiveWater(f)) ==> Fish(f)',
         '(HasExoskeleton(i) & LaysEggs(i) & ColdBlooded(i) & LiveLand(i)) ==> Insect(i)',
         ])
 )
 
+
 #Animal Dictionary
 characteristics_dict = {
-    'cow': ['HasFur', 'GivesMilk', 'WarmBlooded', 'Herbivore'],
-    'dog': ['HasFur', 'GivesMilk', 'WarmBlooded', 'Carnivore'],
-    'cat': ['HasFur', 'GivesMilk', 'WarmBlooded', 'Carnivore'],
-    'monkey': ['HasFur', 'WarmBlooded', 'Omnivore', ],
-    'zebra': ['HasStripes', 'WarmBlooded', 'Herbivore'],
-    'giraffe': ['HasSpots', 'WarmBlooded', 'Herbivore'],
-    'panda': ['HasBlackAndWhiteFur', 'WarmBlooded', 'Herbivore'],
-    'penguin': ['HasFeathers', 'WarmBlooded', 'Carnivore'],
-    'kangaroo': ['HasFur', 'WarmBlooded', 'Herbivore'],
-    'octopus': ['HasEightArms', 'ColdBlooded', 'Carnivore'],
-    'lion': ['HasFur', 'WarmBlooded', 'Carnivore'],
-    'dolphin': ['HasSkin', 'WarmBlooded', 'Carnivore', 'Fins', 'Echolocation'],
-    'owl': ['HasFeathers', 'LaysEggs', 'Nocturnal', 'Carnivore'],
-    'snake': ['HasScales', 'ColdBlooded', 'Carnivore','Venomous'],
-    'fish': ['HasScales', 'LaysEggs', 'ColdBlooded', 'Omnivore/Carnivore', 'Fins'],
-    'butterfly': ['HasWings', 'ColdBlooded', 'Herbivore'],
-    'wolf': ['HasFur', 'WarmBlooded', 'Carnivore'],
-    'bear': ['HasFur', 'WarmBlooded', 'Omnivore', 'Hibernation'],
-    'horse': ['HasFur', 'WarmBlooded', 'Herbivore'],
-    'elephant': ['HasSkin', 'WarmBlooded', 'Herbivore'],
-    'tiger': ['HasStripes', 'WarmBlooded', 'Carnivore'],
-    'frog': ['HasSmoothSkin', 'ColdBlooded', 'Insectivore', 'Amphibious'],
-    'turtle': ['HasShell', 'ColdBlooded', 'Herbivore/Omnivore'],
+    'cow': ['HasFur', 'GivesMilk', 'WarmBlooded', 'Herbivore', 'Mammal'],
+    'dog': ['HasFur', 'GivesMilk', 'WarmBlooded', 'Carnivore', 'Mammal'],
+    'cat': ['HasFur', 'GivesMilk', 'WarmBlooded', 'Carnivore', 'Mammal'],
+    'monkey': ['HasFur', 'WarmBlooded', 'Omnivore', 'Mammal'],
+    'zebra': ['HasStripes', 'WarmBlooded', 'Herbivore', 'Mammal'],
+    'giraffe': ['HasSpots', 'WarmBlooded', 'Herbivore', 'Mammal'],
+    'panda': ['HasBlackAndWhiteFur', 'WarmBlooded', 'Herbivore', 'Mammal'],
+    'penguin': ['HasFeathers', 'WarmBlooded', 'Carnivore', 'Bird'],
+    'kangaroo': ['HasFur', 'WarmBlooded', 'Herbivore', 'Mammal'],
+    'lion': ['HasFur', 'WarmBlooded', 'Carnivore', 'Mammal'],
+    'dolphin': ['HasSkin', 'WarmBlooded', 'Carnivore', 'Fins', 'Echolocation', 'Mammal'],
+    'owl': ['HasFeathers', 'LaysEggs', 'Nocturnal', 'Carnivore', 'Bird'],
+    'snake': ['HasScales', 'ColdBlooded', 'Carnivore','Venomous', 'Reptile'],
+    'fish': ['HasScales', 'LaysEggs', 'ColdBlooded', 'Omnivore/Carnivore', 'Fins', 'Fish'],
+    'butterfly': ['HasWings', 'ColdBlooded', 'Herbivore', "Insect"],
+    'wolf': ['HasFur', 'WarmBlooded', 'Carnivore', 'Mammal'],
+    'bear': ['HasFur', 'WarmBlooded', 'Omnivore', 'Hibernation', 'Mammal'],
+    'horse': ['HasFur', 'WarmBlooded', 'Herbivore', 'Mammal'],
+    'elephant': ['HasSkin', 'WarmBlooded', 'Herbivore', 'Mammal'],
+    'tiger': ['HasStripes', 'WarmBlooded', 'Carnivore', 'Mammal'],
+    'frog': ['HasSmoothSkin', 'ColdBlooded', 'Insectivore', 'Amphibious', "Amphibians"],
+    'turtle': ['HasShell', 'ColdBlooded', 'Herbivore/Omnivore', "Reptile"],
 }
 
 choose = 0
@@ -167,20 +177,14 @@ while choose != '4':
         input("\nPress Enter to continue...")
     if choose == '2':
         animal_name = input("Enter the name of the animal: ")
-        characteristics = get_characteristics(animal_name.capitalize(), animal_kb)
+        characteristics = update_kb_with_new_animal(animal_name, animal_kb)
         if characteristics:
-            print(f"{animal_name} has the following characteristics:")
+            print("\n")
+            print(f"{animal_name} has been added with the following characteristics:")
             for char in characteristics:
                 print(f"- {char}")
         else:
-            characteristics = update_kb_with_new_animal(animal_name, animal_kb)
-            if characteristics:
-                print("\n")
-                print(f"{animal_name} has been added with the following characteristics:")
-                for char in characteristics:
-                    print(f"- {char}")
-            else:
-                print(f"Unable to add '{animal_name}' to the knowledge base.")
+            print(f"Unable to add '{animal_name}' to the knowledge base.")
         animal_class = determine_class(animal_name, animal_kb)
         print(f"The class of {animal_name} is: {animal_class}")
         input("\nPress Enter to continue...")
@@ -188,12 +192,17 @@ while choose != '4':
         exec(open('fol.py').read())
 
     if choose == "3":
-        dictInput = input("What kind of species do you want to know? ").lower()
+        display_animal_table(characteristics_dict)
+        dictInput = input("\nWhat kind of species do you want to know? ").lower()
+        animal_class = determine_class(dictInput, animal_kb)
         animalDictionary = characteristics_dict.get(dictInput)
+        last_characteristic = characteristics_dict[dictInput][-1]
         if animalDictionary:
-            print(f"{dictInput} has the following characteristics:")
+            print(f"\n{dictInput} has the following characteristics:")
             for char in animalDictionary:
                 print(f"- {char}")
+            print(f"\nThe class of {dictInput} is: {last_characteristic}")
         else:
             print(f"{dictInput} is not recognized in the knowledge base.")
         input("\nPress Enter to continue...")
+        
