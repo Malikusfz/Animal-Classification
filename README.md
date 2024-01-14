@@ -1,5 +1,5 @@
 ## Deskripsi
-Proyek ini membahas penerapan prinsip First Order Logic untuk memodelkan hubungan karakteristik hewan. Dengan menggunakan FOL, proyek ini bertujuan untuk meningkatkan ketepatan pengenalan spesies dan mengatasi akurasi dalam klasifikasi hewan yang melibatkan variasi ciri-ciri biologis
+Proyek ini merupakan sebuah inisiatif yang mendalam dalam menerapkan prinsip First Order Logic (FOL) sebagai landasan utama untuk memodelkan hubungan karakteristik hewan. Dengan memanfaatkan FOL, proyek ini memiliki tujuan yang ambisius yaitu meningkatkan ketepatan dalam pengenalan spesies hewan dan mengatasi tantangan akurasi dalam proses klasifikasi yang melibatkan berbagai variasi ciri-ciri biologis.
 
 ## Requirements
 - Windows /  MacOS / Linux
